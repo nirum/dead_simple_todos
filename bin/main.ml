@@ -1,28 +1,13 @@
-(* A simple todo object *)
-type todo = {
-  text : string;
-  completed : bool;
-}
+open Dead_simple_todos
 
 (* File on disk that holds the todos. *)
 let file = "/Users/niru/.todo.txt"
-
-(* Convert todo type to text representation. *)
-let serialize_todo todo =
-  let status = if todo.completed then "1" else "0" in
-  status ^ "\t" ^ todo.text
-
-(* Convert text representation to todo type. *)
-let deserialize_todo line =
-  match String.split_on_char '\t' line with
-    | [ status; text ] -> { completed = status = "1"; text }
-    | _ -> { completed = false; text = line }
 
 (* Load todos from file. *)
 let load_todos () =
   if Sys.file_exists file then
     In_channel.with_open_text file In_channel.input_lines
-    |> List.map deserialize_todo
+    |> List.map Todo.deserialize
   else
     []
 
@@ -30,7 +15,7 @@ let load_todos () =
 let save_todos todos =
   let contents =
     todos
-    |> List.map serialize_todo
+    |> List.map Todo.serialize
     |> String.concat "\n"
   in
   Out_channel.with_open_text file (fun oc ->
@@ -40,10 +25,10 @@ let save_todos todos =
 (* Add todo to the file. *)
 let add_todo text =
   let todos = load_todos () in
-  save_todos (todos @ [ { text; completed = false } ]);
+  save_todos (todos @ [ { Todo.text; completed = false } ]);
   Printf.printf "Added: %s\n" text
 
-let print_todo index todo =
+let print_todo index (todo : Todo.t) =
   let mark = if todo.completed then "x" else " " in
   Printf.printf "%d. [%s] %s\n" index mark todo.text
 
@@ -54,7 +39,7 @@ let list_todos todos =
   let todos = load_todos () in
   let updated =
     todos
-    |> List.mapi (fun i todo ->
+    |> List.mapi (fun i (todo : Todo.t) ->
       if i + 1 = n then { todo with completed = true } else todo)
   in
   save_todos updated;
@@ -75,4 +60,3 @@ let () =
       | Some n -> mark_done n
       | None -> usage ())
   | _ -> usage ()
-
