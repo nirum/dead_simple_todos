@@ -14,4 +14,5 @@ let () =
       match int_of_string_opt n with
       | Some n -> Dead_simple_todos.Todo.mark_done n
       | None -> usage ())
+  | [ _; "clear" ] -> clear_completed ()
   | _ -> usage ()
