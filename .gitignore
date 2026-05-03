@@ -1,0 +1,26 @@
+# Dune build artifacts
+_build/
+_opam/
+
+# Editor / merge artifacts
+*.install
+*.merlin
+.merlin
+
+# OCaml byte/native objects
+*.cmi
+*.cmo
+*.cmx
+*.cma
+*.cmxa
+*.cmt
+*.cmti
+*.o
+*.a
+*.so
+*.annot
+
+# OS / editor cruft
+.DS_Store
+*.swp
+*~

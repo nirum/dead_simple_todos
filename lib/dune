@@ -1,0 +1,2 @@
+(library
+ (name dead_simple_todos))

@@ -1,0 +1,4 @@
+(executable
+ (public_name dst)
+ (name main)
+ (libraries dead_simple_todos))
