@@ -1,3 +1,10 @@
+(* ANSI color escape codes. *)
+let reset = "\027[0m"
+let green = "\027[32m"
+let dim = "\027[2m"
+let bold = "\027[1m"
+let cyan = "\027[36m"
+
 (* A simple todo object *)
 type todo = {
   text : string;
@@ -41,16 +48,20 @@ let save_todos todos =
 let add_todo text =
   let todos = load_todos () in
   save_todos (todos @ [ { text; completed = false } ]);
-  Printf.printf "Added: %s\n" text
+  Printf.printf "%sAdded:%s %s\n" green reset text
 
 let print_todo index todo =
-  let mark = if todo.completed then "x" else " " in
-  Printf.printf "%d. [%s] %s\n" index mark todo.text
+  if todo.completed then
+    Printf.printf "%s%s%d.%s %s[%sx%s] %s%s\n"
+      dim cyan index reset dim green dim todo.text reset
+  else
+    Printf.printf "%s%d.%s [ ] %s\n" cyan index reset todo.text
 
 let list_todos todos =
   todos
   |> List.iteri (fun i todo -> print_todo (i + 1) todo)
-  let mark_done n =
+
+let mark_done n =
   let todos = load_todos () in
   let updated =
     todos
@@ -58,10 +69,10 @@ let list_todos todos =
       if i + 1 = n then { todo with completed = true } else todo)
   in
   save_todos updated;
-  Printf.printf "Marked #%d done\n" n
+  Printf.printf "Marked #%d %sdone%s\n" n green reset
 
 let usage () =
-  print_endline "Usage:";
+  Printf.printf "%sUsage:%s\n" bold reset;
   print_endline "  todo add \"task text\"";
   print_endline "  todo list";
   print_endline "  todo done <number>"
@@ -75,4 +86,3 @@ let () =
       | Some n -> mark_done n
       | None -> usage ())
   | _ -> usage ()
-
