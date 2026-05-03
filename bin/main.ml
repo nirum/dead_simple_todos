@@ -60,11 +60,19 @@ let list_todos todos =
   save_todos updated;
   Printf.printf "Marked #%d done\n" n
 
+let clear_completed () =
+  let todos = load_todos () in
+  let remaining = List.filter (fun t -> not t.completed) todos in
+  let removed = List.length todos - List.length remaining in
+  save_todos remaining;
+  Printf.printf "Cleared %d completed todo(s)\n" removed
+
 let usage () =
   print_endline "Usage:";
   print_endline "  todo add \"task text\"";
   print_endline "  todo list";
-  print_endline "  todo done <number>"
+  print_endline "  todo done <number>";
+  print_endline "  dst clear"
 
 let () =
   match Array.to_list Sys.argv with
@@ -74,5 +82,6 @@ let () =
       match int_of_string_opt n with
       | Some n -> mark_done n
       | None -> usage ())
+  | [ _; "clear" ] -> clear_completed ()
   | _ -> usage ()
 
