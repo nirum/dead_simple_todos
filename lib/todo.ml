@@ -26,6 +26,7 @@ let deserialize line =
 let load () =
   if Sys.file_exists file then
     In_channel.with_open_text file In_channel.input_lines
+    |> List.filter (fun line -> line <> "")
     |> List.map deserialize
   else
     []
@@ -71,8 +72,9 @@ let clear () =
     (if cleared = 1 then "" else "s")
 
 let list todos =
-  todos
-  |> List.iteri (fun i todo -> print (i + 1) todo)
+  match todos with
+  | [] -> print_endline "No todos. Enjoy your day!"
+  | _ -> todos |> List.iteri (fun i todo -> print (i + 1) todo)
 
 let mark_done n =
   let todos = load () in
