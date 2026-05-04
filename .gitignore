@@ -24,3 +24,6 @@ _opam/
 .DS_Store
 *.swp
 *~
+
+# AI Agents
+.claude
