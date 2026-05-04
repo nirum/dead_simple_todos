@@ -1,4 +1,4 @@
-(* A simple todo object *)
+(* A simple todo object. *)
 type t = {
   text : string;
   completed : bool;
