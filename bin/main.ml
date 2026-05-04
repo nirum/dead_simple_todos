@@ -76,13 +76,32 @@ let usage () =
   print_endline "  todo add \"task text\"";
   print_endline "  todo list";
   print_endline "  todo done <number>"
+let delete n =
+  let todos = load_todos () in
+  let updated = todos |> List.filteri (fun i _ -> i + 1 <> n) in
+  save_todos updated;
+  Printf.printf "Deleted #%d\n" n
+
+let usage () =
+  print_endline "Usage:";
+  print_endline "  dst add \"task text\"";
+  print_endline "  dst list";
+  print_endline "  dst done <number>"
+  print_endline "  dst delete <number>"
 
 let () =
   match Array.to_list Sys.argv with
+  | [ _ ] -> list_todos (load_todos ())
+  | [ _; "--help" ] -> usage ()
   | [ _; "add"; text ] -> add_todo text
   | [ _; "list" ] -> list_todos (load_todos ())
   | [ _; "done"; n ] -> (
       match int_of_string_opt n with
-      | Some n -> mark_done n
+      | Some n -> Dead_simple_todos.Todo.mark_done n
       | None -> usage ())
+  | [ _; "delete"; n ] -> (
+      match int_of_string_opt n with
+      | Some n -> delete n
+      | None -> usage ())
+  | [ _; "clear" ] -> clear_completed ()
   | _ -> usage ()
