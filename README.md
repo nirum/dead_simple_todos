@@ -1,4 +1,4 @@
-# dead_simple_todos
+# Dead Simple Todos (dst)
 
 A tiny command-line todo list in OCaml. Todos are stored as tab-separated lines in `~/.todo.txt`.
 
@@ -13,9 +13,9 @@ dune build
 The executable is installed as `dst`:
 
 ```sh
-dst add "buy milk"
-dst list
-dst done 1
+dst                     # List existing todos
+dst add "buy milk"      # Add a new todo
+dst done 1              # Mark a todo as completed
 ```
 
 Or run without installing:
