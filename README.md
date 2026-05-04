@@ -16,6 +16,7 @@ The executable is installed as `dst`:
 dst                     # List existing todos
 dst add "buy milk"      # Add a new todo
 dst done 1              # Mark a todo as completed
+dst clear               # Delete all completed todos
 ```
 
 Or run without installing:

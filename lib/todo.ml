@@ -60,6 +60,15 @@ let delete n =
   save updated;
   Printf.printf "Deleted #%d\n" n
 
+let clear () =
+  let todos = load () in
+  let remaining = todos |> List.filter (fun t -> not t.completed) in
+  let cleared = List.length todos - List.length remaining in
+  save remaining;
+  Printf.printf "Cleared %s%d%s completed task%s\n"
+    Colors.green cleared Colors.reset
+    (if cleared = 1 then "" else "s")
+
 let list todos =
   todos
   |> List.iteri (fun i todo -> print (i + 1) todo)
