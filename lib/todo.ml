@@ -5,7 +5,11 @@ type t = {
 }
 
 (* File on disk that holds the todos. *)
-let file = "/Users/niru/.todo.txt"
+let home_dir () =
+  match Sys.getenv_opt "HOME" with
+  | Some home -> home
+  | None -> failwith "HOME is not set"
+let file = Filename.concat (home_dir ()) ".todo.txt"
 
 (* Convert todo type to text representation. *)
 let serialize todo =
