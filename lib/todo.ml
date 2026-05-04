@@ -45,11 +45,20 @@ let save todos =
 let add text =
   let todos = load () in
   save (todos @ [ { text; completed = false } ]);
-  Printf.printf "Added: %s\n" text
+  Printf.printf "%sAdded:%s %s\n" Colors.green Colors.reset text
 
 let print index todo =
-  let mark = if todo.completed then "x" else " " in
-  Printf.printf "%d. [%s] %s\n" index mark todo.text
+  if todo.completed then
+    Printf.printf "%s%s%d.%s %s[%sx%s] %s%s\n"
+      Colors.dim Colors.cyan index Colors.reset Colors.dim Colors.green Colors.dim todo.text Colors.reset
+  else
+    Printf.printf "%s%d.%s [ ] %s\n" Colors.cyan index Colors.reset todo.text
+
+let delete n =
+  let todos = load () in
+  let updated = todos |> List.filteri (fun i _ -> i + 1 <> n) in
+  save updated;
+  Printf.printf "Deleted #%d\n" n
 
 let list todos =
   todos
@@ -63,4 +72,4 @@ let mark_done n =
       if i + 1 = n then { todo with completed = true } else todo)
   in
   save updated;
-  Printf.printf "Marked #%d done\n" n
+  Printf.printf "Marked #%d %sdone%s\n" n Colors.green Colors.reset
