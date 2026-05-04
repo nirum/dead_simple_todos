@@ -45,7 +45,8 @@ let save todos =
 let add text =
   let todos = load () in
   save (todos @ [ { text; completed = false } ]);
-  Printf.printf "%sAdded:%s %s\n" Colors.green Colors.reset text
+  Printf.printf "%sAdded:%s %s%s%s\n"
+    Colors.green Colors.reset Colors.blue text Colors.reset
 
 let print index todo =
   if todo.completed then
@@ -81,4 +82,10 @@ let mark_done n =
       if i + 1 = n then { todo with completed = true } else todo)
   in
   save updated;
-  Printf.printf "Marked #%d %sdone%s\n" n Colors.green Colors.reset
+  match List.nth_opt todos (n - 1) with
+  | Some todo ->
+    Printf.printf "Marked %s#%d: %s%s %sdone%s\n"
+      Colors.blue n todo.text Colors.reset Colors.green Colors.reset
+  | None ->
+    Printf.printf "Marked %s#%d%s %sdone%s\n"
+      Colors.blue n Colors.reset Colors.green Colors.reset
